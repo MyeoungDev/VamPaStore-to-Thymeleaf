@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" th:href="@{/css/admin/authorModify.css}">
+  <script
+          src="https://code.jquery.com/jquery-3.4.1.js"
+          integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+          crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="wrap">
+
+    <th:block th:replace="admin/fragments/header :: adminHeader"></th:block>
+
+    <div class="admin_content_wrap">
+      <div class="admin_content_subject"><span>작가 상세</span></div>
+      <div class="admin_content_main">
+        <form id="modifyForm" action="/admin/authorModify" method="post">
+        <div class="form_section">
+          <p th:text="${authorInfo}"></p>
+          <p th:text="${cri}"></p>
+          <div class="form_section_title">
+            <label>작가 번호</label>
+          </div>
+          <div class="form_section_content">
+            <input class="input_block" name="authorId" readonly="readonly" th:value="${authorInfo.authorId}">
+          </div>
+        </div>
+        <div class="form_section">
+          <div class="form_section_title">
+            <label>작가 이름</label>
+          </div>
+          <div class="form_section_content">
+            <input name="authorName" id="authorName" th:value="${authorInfo.authorName}">
+            <span id="warn_authorName">작가 이름을 입력 해주세요.</span>
+          </div>
+        </div>
+        <div class="form_section">
+          <div class="form_section_title">
+            <label>소속 국가</label>
+          </div>
+          <div class="form_section_content">
+            <select name="nationId" id="nationId" >
+              <option value="none" selected disabled="disabled">=== 선택 ===</option>
+              <option value="01" th:selected="${authorInfo.nationId == '01'}">국내</option>
+              <option value="01" th:selected="${authorInfo.nationId == '02'}">국외</option>
+            </select>
+          </div>
+        </div>
+        <div class="form_section">
+          <div class="form_section_title">
+            <label>작가소개</label>
+          </div>
+          <div class="form_section_content">
+            <textarea name="authorIntro" id="authorIntro" th:value="${authorInfo.authorIntro}" th:text="${authorInfo.authorIntro}"></textarea>
+            <span id="warn_authorIntro">작가 소개를 입력해 주세요.</span>
+          </div>
+        </div>
+        <div class="form_section">
+          <div class="form_section_title">
+            <label>등록 날짜</label>
+          </div>
+          <div class="form_section_content">
+            <input class="input_block" type="text" readonly="readonly" th:value="${#dates.format(authorInfo.regDate, 'yyyy-MM-dd')}">
+          </div>
+        </div>
+        <div class="form_section">
+          <div class="form_section_title">
+            <label>수정 날짜</label>
+          </div>
+          <div class="form_section_content">
+            <input class="input_block" type="text" readonly="readonly" th:value="${#dates.format(authorInfo.updateDate, 'yyyy-MM-dd')}">
+          </div>
+        </div>
+        <div class="btn_section" th:with="num = ${cri.pageNum}">
+          <button id="cancelBtn" class="btn" th:onclick="moveManagePage([[ ${cri.makeQueryString(num)} ]])">작가 목록</button>
+          <button id="modifyBtn" class="btn modify_btn" th:onclick="submitFunc()">수 정</button>
+        </div>
+        </form>
+      </div>
+    </div>
+
+    <th:block th:replace="admin/fragments/footer :: adminFooter"></th:block>
+
+  </div>
+</div>
+
+<script th:inline="javascript">
+  function moveManagePage(queryString) {
+    const uri = "/admin/authorManage";
+
+    location.href = uri + queryString;
+  }
+
+  function submitFunc() {
+
+    event.preventDefault();
+
+    const authorName = document.getElementById("authorName").value;
+    const authorIntro = document.getElementById("authorIntro").value;
+
+    const warnName = document.getElementById("warn_authorName");
+    const warnIntro = document.getElementById("warn_authorIntro");
+
+    let nameCheck = false;
+    let introCheck = false;
+    if (authorName == null || authorName == '') {
+      warnName.style.display = "block";
+    } else {
+      warnName.style.display = "none";
+      nameCheck = true;
+    }
+
+    if (authorIntro == null || authorIntro == '') {
+      warnIntro.style.display = "block";
+    } else {
+      warnIntro.style.display = "none";
+      introCheck = true;
+    }
+
+    if (nameCheck && introCheck) {
+      document.getElementById("modifyForm").submit();
+    } else {
+      return false;
+    }
+
+  }
+  // TODO -> 그냥 Controller에서 null or '' 이 있으면 result Model로 가져와서 alert창으로 끝낼까?
+
+
+</script>
+
+</body>
+</html>

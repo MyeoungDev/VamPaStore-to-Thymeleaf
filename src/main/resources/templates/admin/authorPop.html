@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/admin/authorPop.css}">
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="subject_name_warp"><span>작가 관리</span></div>
+        <div class="author_table_wrap">
+        <th:block th:if="${listCheck != 'empty'}">
+            <table class="author_table">
+                <thead>
+                <tr>
+                    <td class="th_column_1">작가 번호</td>
+                    <td class="th_column_2">작가 이름</td>
+                    <td class="th_column_3">작가 국가</td>
+                    <td class="th_column_4">등록 날짜</td>
+                    <td class="th_column_5">수정 날짜</td>
+                </tr>
+                </thead>
+                <tr th:each="author : ${list}">
+                    <td th:text="${author.authorId}">authorId</td>
+                    <td>
+                        <a class="pop_transData" th:attr="data_id=${author.authorId}, data_name=${author.authorName}" th:text="${author.authorName}">authorName</a>
+                    </td>
+                    <td th:text="${author.nationName}">nationName</td>
+                    <td th:text="${#dates.format(author.regDate, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#dates.format(author.updateDate, 'yyyy-MM-dd')}"></td>
+                </tr>
+            </table>
+        </th:block>
+
+        <th:block th:unless="${listCheck !='empty'}">
+            <div class="table_empty">
+                등록된 작가가 없습니다.
+            </div>
+        </th:block>
+
+    </div>
+
+    <!-- 검색 영역 -->
+    <div class="search_wrap">
+        <form id="searchForm" action="/admin/authorManage" method="get">
+            <div class="search_input">
+                <input id="searchForm_input_pageNum" type="hidden" name="pageNum" th:value="${pageMaker.cri.pageNum}">
+                <input type="hidden" name="amount" th:value="${pageMaker.cri.amount}">
+                <input type="hidden" name="type" th:value="${pageMaker.cri.type}">
+                <input id="searchForm_input_keyword" type="text" name="keyword" th:value="${pageMaker.cri.keyword}">
+                <button class="btn search_btn" id="searchBtn" th:onclick="searchFunc()">검 색</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 페이지 이동 인터페이스 영역 -->
+    <div class="pageMaker_wrap" >
+
+        <ul class="pageMaker">
+
+            <!-- 이전 버튼 -->
+            <th:block th:if="${pageMaker.prev}">
+                <li class="pageMaker_btn prev">
+                    <a href="javascript:void(0)" th:onclick="movePage([[ ${#request.requestURI} ]], [[ ${pageMaker.cri.makeQueryString(pageMaker.pageStart - 1)} ]])">이전</a>
+                </li>
+            </th:block>
+
+            <!-- 페이지 번호 -->
+            <th:block th:with="pageMaker = ${pageMaker}">
+                <th:block th:each="num : *{#numbers.sequence(pageMaker.pageStart, pageMaker.pageEnd)}">
+                    <li class="pageMaker_btn" th:classappend="${pageMaker.cri.pageNum == num} ? 'active' : ''">
+                        <a href="javascript:void(0)" th:text="${num}" th:onclick="movePage( [[ ${#request.requestURI} ]] , [[ ${pageMaker.cri.makeQueryString(num)} ]])"></a>
+                    </li>
+                </th:block>
+            </th:block>
+
+
+            <!-- 다음 버튼 -->
+            <th:block th:if="${pageMaker.next}">
+                <li class="pageMaker_btn next">
+                    <a href="javascript:void(0)" th:onclick="movePage( [[ ${#request.requestURI} ]], [[ ${pageMaker.cri.makeQueryString(pageMaker.pageEnd + 1)} ]])">다음</a>
+                </li>
+            </th:block>
+        </ul>
+    </div>
+
+
+<script th:inline="javascript">
+
+    function movePage(uri, queryString) {
+        location.href = uri + queryString;
+    }
+
+    let transObj = document.getElementsByClassName("pop_transData");
+    for (let i = 0; i < transObj.length; i++) {
+        transObj[i].addEventListener("click", function () {
+            let authorId = transObj[i].attributes['1'].value;
+            let authorName = transObj[i].attributes['2'].value;
+
+            transParentsWindow(authorId, authorName);
+        });
+    }
+
+    function transParentsWindow(authorId, authorName) {
+        console.log(authorId);
+        console.log(authorName);
+
+        window.opener.document.getElementById("authorId_input").value = authorId;
+        window.opener.document.getElementById("authorName_input").value = authorName;
+
+        window.close();
+    }
+
+
+</script>
+</body>
+</html>

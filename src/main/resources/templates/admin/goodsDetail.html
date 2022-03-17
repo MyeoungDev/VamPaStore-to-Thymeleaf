@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/admin/goodsDetail.css}">
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous">
+
+    </script>
+    <!-- 위지윅 CK Editor-->
+    <script src="https://cdn.ckeditor.com/ckeditor5/32.0.0/classic/ckeditor.js"></script>
+    <!-- jquery datePicker-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div class="wrap">
+        <!-- gnv_area -->
+        <th:block th:replace="admin/fragments/header :: adminHeader"></th:block>
+
+        <div class="admin_content_wrap">
+            <div class="admin_content_main">
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>책 제목</label>
+                    </div>
+                    <div class="form_section_content">
+                        <input name="bookName" disabled="disabled" th:value="${goodsInfo.bookName}">
+                    </div>
+                </div>
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>작가</label>
+                    </div>
+                    <div class="form_section_content">
+                        <input id="authorName_input" readonly="readonly" th:value="${goodsInfo.authorName}" disabled="disabled">
+                    </div>
+                </div>
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>출판일</label>
+                    </div>
+                    <div class="form_section_content">
+                        <input name="publeYear" autocomplete="off" disabled="disabled" th:value="${goodsInfo.publeYear}">
+                    </div>
+                </div>
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>출판사</label>
+                    </div>
+                    <div class="form_section_content">
+                        <input name="publisher" disabled th:value="${goodsInfo.publisher}">
+                    </div>
+                </div>
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>책 카테고리</label>
+                    </div>
+                    <div class="form_section_content">
+                        <div class="cate_wrap">
+                            <span>대분류</span>
+                            <select class="cate1" id="cate1">
+                                <option selected value="none">선택</option>
+                            </select>
+                        </div>
+                        <div class="cate_wrap">
+                            <span>중분류</span>
+                            <select class="cate2" id="cate2">
+                                <option selected value="none">선택</option>
+                            </select>
+                        </div>
+                        <div class="cate_wrap">
+                            <span>소분류</span>
+                            <select class="cate3" name="cateCode" id="cate3">
+                                <option selected value="none">선택</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>상품 가격</label>
+                    </div>
+                    <div class="form_section_content">
+                        <input name="bookPrice" disabled th:value="${goodsInfo.bookPrice}">
+                    </div>
+                </div>
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>상품 재고</label>
+                    </div>
+                    <div class="form_section_content">
+                        <input name="bookStock" disabled th:value="${goodsInfo.bookStock}">
+                    </div>
+                </div>
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>상품 할인율</label>
+                    </div>
+                    <div class="form_section_content">
+                        <input id="discount_interface" maxlength="2" value="0" disabled>
+                    </div>
+                </div>
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>책 소개</label>
+                    </div>
+                    <div class="form_section_content">
+                        <textarea name="bookIntro" id="bookIntro_textarea" disabled th:value="${goodsInfo.bookIntro}" th:text="${goodsInfo.bookIntro}"></textarea>
+                    </div>
+                </div>
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>책 목차</label>
+                    </div>
+                    <div class="form_section_content">
+                        <textarea name="bookContents" id="bookContents_textarea" disabled th:value="${goodsInfo.bookContents}" th:text="${goodsInfo.bookContents}"></textarea>
+                    </div>
+                </div>
+                <div class="btn_section" th:with="num = ${cri.pageNum}">
+                    <button id="cancelBtn" class="btn" th:onclick="moveManagePage( [[ ${cri.makeQueryString(num)} ]] )">상품목록</button>
+                    <button id="enrollBtn" class="btn enroll_btn" th:onclick="| location.href = '@{/admin/goodsModify( bookId = ${goodsInfo.bookId} )}' |">수정</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Footer 영역 -->
+        <th:block th:replace="admin/fragments/footer :: adminFooter"></th:block>
+
+
+    </div>    <!-- class="wrap" -->
+</div>    <!-- class="wrapper" -->
+
+
+<script th:inline="javascript">
+
+    /* 책 소개 CK Editor */
+    ClassicEditor
+        .create(document.querySelector('#bookIntro_textarea'))
+        .then(editor => {
+            console.log(editor);
+            editor.isReadOnly = true;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    /* 책 목차 CK Editor */
+    ClassicEditor
+        .create(document.querySelector('#bookContents_textarea'))
+        .then(editor => {
+            console.log(editor);
+            editor.isReadOnly = true;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+
+    /* ![CDATA[ */
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        let bookDiscount = [[ ${goodsInfo.bookDiscount}]] * 100;
+
+        let cateList = JSON.parse([[ ${cateList}]]);
+
+        cate1Array = new Array();
+        cate2Array = new Array();
+        cate3Array = new Array();
+
+        cate1Obj = new Object();
+        cate2Obj = new Object();
+        cate3Obj = new Object();
+
+        cateSelect1 = document.getElementById('cate1');
+        cateSelect2 = document.getElementById('cate2');
+        cateSelect3 = document.getElementById('cate3');
+
+        function makeCateArray(obj, array, cateList, tier) {
+            for (let i = 0; i < cateList.length; i++) {
+                if (cateList[i].tier === tier) {
+                    obj = new Object();
+                    obj.cateName = cateList[i].cateName;
+                    obj.cateCode = cateList[i].cateCode;
+                    obj.cateParent = cateList[i].cateParent;
+
+                    array.push(obj);
+                }
+            }
+        }
+
+        makeCateArray(cate1Obj, cate1Array, cateList, 1);
+        makeCateArray(cate2Obj, cate2Array, cateList, 2);
+        makeCateArray(cate3Obj, cate3Array, cateList, 3);
+
+
+        console.log(cate1Array);
+        console.log(cate2Array);
+        console.log(cate3Array);
+
+        let targetCode3 = [[ ${goodsInfo.cateCode}]];
+
+        while (cateSelect3.firstChild) {
+            cateSelect3.firstChild.remove();
+        }
+
+        while (cateSelect2.firstChild) {
+            cateSelect2.firstChild.remove();
+        }
+
+        while (cateSelect1.firstChild) {
+            cateSelect1.firstChild.remove();
+        }
+
+        for (let i = 0; i < cate3Array.length; i++) {
+            if (targetCode3 === cate3Array[i].cateCode) {
+                targetCode3 = cate3Array[i];
+                let option = document.createElement("option");
+                let optionText = document.createTextNode(targetCode3.cateName);
+                option.appendChild(optionText);
+                option.value = targetCode3.cateCode;
+                option.selected = true;
+                cateSelect3.appendChild(option);
+            }
+        }
+
+        let targetCode2 = targetCode3.cateParent;
+
+        for (let i = 0; i < cate2Array.length; i++) {
+            if (targetCode2 === cate2Array[i].cateCode) {
+                targetCode2 = cate2Array[i];
+                let option = document.createElement("option");
+                let optionText = document.createTextNode(targetCode2.cateName);
+                option.appendChild(optionText);
+                option.value = targetCode2.cateCode;
+                option.selected = true;
+                cateSelect2.appendChild(option);
+            }
+        }
+
+        let targetCode1 = targetCode2.cateParent;
+
+        for (let i = 0; i < cate1Array.length; i++) {
+            if (targetCode1 === cate1Array[i].cateCode) {
+                targetCode1 = cate1Array[i];
+                let option = document.createElement("option");
+                let optionText = document.createTextNode(targetCode1.cateName);
+                option.appendChild(optionText);
+                option.value = targetCode1.cateCode;
+                option.selected = true;
+                cateSelect1.appendChild(option);
+            }
+        }
+
+
+        document.getElementById("discount_interface").value = bookDiscount;
+
+    });
+
+
+    function moveManagePage(queryString) {
+        const uri = "/admin/goodsManage";
+
+        location.href = uri + queryString;
+
+    }
+
+
+
+
+    /* ]]*/
+</script>
+
+</body>
+</html>

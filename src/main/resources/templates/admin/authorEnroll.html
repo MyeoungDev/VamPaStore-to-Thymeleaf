@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/admin/authorEnroll.css}">
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous">
+
+    </script>
+</head>
+<body>
+<div class="wrapper">
+    <div class="wrap">
+        <!-- gnv_area -->
+        <th:block th:replace="admin/fragments/header :: adminHeader"></th:block>
+
+            <div class="admin_content_wrap">
+                <div class="admin_content_subject"><span>작가 등록</span></div>
+                <div class="admin_content_main">
+                    <form action="/admin/authorEnroll.do" method="post" id="enrollForm">
+                        <div class="form_section">
+                            <div class="form_section_title">
+                                <label>작가 이름</label>
+                            </div>
+                            <div class="form_section_content">
+                                <input name="authorName" id="authorName">
+                                <span class="warn_authorName">작가 이름을 입력해주세요.</span>
+                            </div>
+                        </div>
+                        <div class="form_section">
+                            <div class="form_section_title">
+                                <label>소속 국가</label>
+                            </div>
+                            <div class="form_section_content">
+                                <select name="nationId" id="nationId">
+                                    <option value="none" selected>=== 선택 ===</option>
+                                    <option value="01">국내</option>
+                                    <option value="02">국외</option>
+                                </select>
+                                <span class="warn_nationId">소속 국가를 선택해주세요.</span>
+                            </div>
+                        </div>
+                        <div class="form_section">
+                            <div class="form_section_title">
+                                <label>작가소개</label>
+                            </div>
+                            <div class="form_section_content">
+                                <input name="authorIntro" type="text" id="authorIntro">
+                                <span class="warn_authorIntro">작가 소개를 입력해주세요.</span>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="btn_section">
+                        <button id="cancelBtn" class="btn">취 소</button>
+                        <button id="enrollBtn" class="btn enroll_btn" onclick="enrollBtnFunc()">등 록</button>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <!-- Footer 영역 -->
+        <th:block th:replace="admin/fragments/footer :: adminFooter"></th:block>
+
+    </div>    <!-- class="wrap" -->
+</div>    <!-- class="wrapper" -->
+
+
+<script>
+
+    /* 등록 버튼 */
+    function enrollBtnFunc() {
+
+        let nameCheck = false;
+        let nationCheck = false;
+        let introCheck = false;
+
+        let authorNameValue = document.getElementById("authorName").value;
+        let nationIdValue = document.getElementById("nationId").value;
+        let authorIntroValue = document.getElementById("authorIntro").value;
+
+        if (authorNameValue === '') {
+            $(".warn_authorName").css("display", "block");
+            // authorNameWarn.style.display = "block";
+            nameCheck = false;
+        } else {
+            $(".warn_authorName").css("display", "none");
+            nameCheck = true;
+            // authorNameWarn.style.display = "none";
+        }
+
+        if (nationIdValue === 'none') {
+            $(".warn_nationId").css("display", "block");
+            // nationIdWarn.style.display = "block";
+            nationCheck = false;
+        } else {
+            $(".warn_nationId").css("display", "none");
+            nationCheck = true;
+            // nationIdWarn.style.display = "none";
+        }
+
+        if (authorIntroValue === '') {
+            $(".warn_authorIntro").css("display", "block");
+            // authorIntroWarn.style.display = "block";
+            introCheck = false;
+        } else {
+            $(".warn_authorIntro").css("display", "none");
+            introCheck = true;
+            // authorIntroWarn.style.display = "none";
+        }
+
+        if (nameCheck && nationCheck && introCheck) {
+            document.getElementById("enrollForm").submit();
+        } else {
+            return;
+        }
+
+
+    }
+
+    /* 취소 버튼 */
+    document.getElementById("cancelBtn").addEventListener("click", function () {
+        location.href = "/admin/authorManage";
+    });
+
+
+</script>
+
+</body>
+</html>

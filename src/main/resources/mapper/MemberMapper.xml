@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vam.mapper.MemberMapper">
+    <insert id="memberJoin" parameterType="com.vam.domain.MemberVO">
+        INSERT INTO book_member
+        VALUES (
+                #{memberId}
+                , #{memberPw}
+                , #{memberName}
+                , #{memberMail}
+                , #{memberAddr1}
+                , #{memberAddr2}
+                , #{memberAddr3}
+                , 0
+                , sysdate()
+                , 100000
+                , 5000
+               )
+    </insert>
+
+<!--    아이디 중복 검사-->
+    <select id="idCheck" resultType="int">
+        SELECT
+           COUNT(*)
+        FROM
+            book_member
+        WHERE
+            memberId = #{memberId}
+    </select>
+
+    <!-- 로그인 -->
+    <!--<select id="memberLogin" resultType="com.vam.domain.MemberVO">
+        SELECT
+            memberId, memberName, adminck, money, point
+        FROM
+            book_member
+        WHERE
+            memberId = #{memberId}
+        AND
+            memberPw = #{memberPw}
+    </select>-->
+    <select id="memberLogin" resultType="com.vam.domain.MemberVO">
+        SELECT
+            memberId, memberPw, memberName, adminck, money, point
+        FROM
+            book_member
+        WHERE
+            memberId = #{memberId}
+    </select>
+</mapper>

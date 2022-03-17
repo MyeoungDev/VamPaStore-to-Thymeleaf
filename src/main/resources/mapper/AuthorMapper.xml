@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vam.mapper.AuthorMapper">
+
+    <insert id="authorEnroll">
+        INSERT INTO vam_author (
+            authorName,
+            nationId,
+            authorIntro
+        )
+        VALUE (
+            #{authorName},
+            #{nationId},
+            #{authorIntro}
+        )
+    </insert>
+
+    <select id="authorGetList" resultType="com.vam.domain.AuthorVO">
+        SELECT
+            authorid, authorname, nationid, regdate, updatedate
+        FROM
+            vam_author
+        <if test="keyword != null">
+            WHERE
+                authorname
+            LIKE
+                concat('%', #{keyword}, '%')
+        </if>
+        ORDER BY
+            authorid
+        DESC
+        LIMIT #{skip}, #{amount}
+    </select>
+
+    <select id="authorGetTotal" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            vam_author
+        <if test="keyword != null">
+            WHERE
+                authorname
+            LIKE
+                concat('%', #{keyword}, '%')
+        </if>
+    </select>
+
+    <select id="authorGetDetail" resultType="com.vam.domain.AuthorVO">
+        SELECT *
+        FROM vam_author
+        WHERE
+            authorId = #{authorId}
+    </select>
+
+    <update id="authorModify">
+        UPDATE
+            vam_author
+        SET
+            authorName = #{authorName},
+            nationId = #{nationId},
+            authorIntro = #{authorIntro},
+            updateDate = now()
+        WHERE
+            authorId = #{authorId}
+    </update>
+</mapper>
