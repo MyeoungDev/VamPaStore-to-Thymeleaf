@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.model.IModel;
 
 import java.util.List;
 
@@ -97,10 +98,30 @@ public class AdminController {
     public void goodsModifyGET(
             @RequestParam(value = "bookId", required = false) int bookId,
             Criteria cri,
-            Mode mode
+            Model model
     ) {
         logger.info("goodsModifyGET.........." + bookId);
+        Gson gson = new Gson();
+        String cateList = gson.toJson(adminService.cateList());
+
+        model.addAttribute("cateList", cateList);
+
+        model.addAttribute("goodsInfo", adminService.goodsGetDetail(bookId));
+
     }
+
+    @RequestMapping(value = "/goodsModify", method = RequestMethod.POST)
+    public String goodsModifyPOST(BookVO book, RedirectAttributes rttr) {
+
+        logger.info("goodsModifyPOST............" + book);
+
+        int result = adminService.goodsModify(book);
+
+        rttr.addFlashAttribute("goodsModify_result", result);
+
+        return "redirect:/admin/goodsManage";
+    }
+
 
     /* 작가 등록 페이지 접속 */
     @RequestMapping(value = "authorEnroll", method = RequestMethod.GET)

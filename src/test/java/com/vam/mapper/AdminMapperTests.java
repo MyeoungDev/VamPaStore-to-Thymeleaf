@@ -60,4 +60,24 @@ public class AdminMapperTests {
         BookVO book = mapper.goodsGetDetail(bookId);
         System.out.println("detail Test result.........." + book);
     }
+
+    @Test
+    public void goodsModifyTest() {
+        BookVO book = new BookVO();
+
+        book.setBookId(1019);
+        book.setBookName("수정 테스트1");
+        book.setAuthorId(8160);
+        book.setPubleYear("2022-03-18");
+        book.setPublisher("출판사");
+        book.setCateCode("103002");
+        book.setBookPrice(20000);
+        book.setBookStock(200);
+        book.setBookDiscount(0.1);
+        book.setBookIntro("책 소개 ");
+        book.setBookContents("책 목차 ");
+
+        mapper.goodsModify(book);
+
+    }
 }

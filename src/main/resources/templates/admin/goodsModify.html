@@ -22,18 +22,15 @@
     <div class="wrap">
         <!-- gnv_area -->
         <th:block th:replace="admin/fragments/header :: adminHeader"></th:block>
-        <!-- TODO 여기 수정페이지 복사해놓은거 알맞게 바꿔놓기
-             TODO git 하기
-        -->
         <div class="admin_content_wrap">
             <div class="admin_content_main">
-                <form action="/admin/goodsEnroll" method="post" id="enrollForm">
+                <form action="/admin/goodsModify" method="post" id="enrollForm">
                     <div class="form_section">
                         <div class="form_section_title">
                             <label>책 제목</label>
                         </div>
                         <div class="form_section_content">
-                            <input name="bookName">
+                            <input name="bookName" th:value="${goodsInfo.bookName}">
                             <span class="ck_warn bookName_warn">책 이름을 입력해주세요.</span>
                         </div>
                     </div>
@@ -42,8 +39,8 @@
                             <label>작가</label>
                         </div>
                         <div class="form_section_content">
-                            <input id="authorName_input" readonly="readonly">
-                            <input id="authorId_input" name="authorId" type="hidden">
+                            <input id="authorName_input" readonly="readonly" th:value="${goodsInfo.authorName}">
+                            <input id="authorId_input" name="authorId" type="hidden" th:value="${goodsInfo.authorId}">
                             <button class="authorId_btn" id="authorIdBtn">작가 선택</button>
                             <span class="ck_warn authorId_warn">작가를 선택해주세요</span>
                         </div>
@@ -53,7 +50,7 @@
                             <label>출판일</label>
                         </div>
                         <div class="form_section_content">
-                            <input name="publeYear" autocomplete="off" readonly="readonly">
+                            <input name="publeYear" autocomplete="off" readonly="readonly" th:value="${goodsInfo.publeYear}">
                             <span class="ck_warn publeYear_warn">출판일을 선택해주세요.</span>
                         </div>
                     </div>
@@ -62,7 +59,7 @@
                             <label>출판사</label>
                         </div>
                         <div class="form_section_content">
-                            <input name="publisher">
+                            <input name="publisher" th:value="${goodsInfo.publisher}">
                             <span class="ck_warn publisher_warn">출판사를 입력해주세요.</span>
                         </div>
                     </div>
@@ -97,7 +94,7 @@
                             <label>상품 가격</label>
                         </div>
                         <div class="form_section_content">
-                            <input name="bookPrice" value="0">
+                            <input name="bookPrice" value="0" th:value="${goodsInfo.bookPrice}">
                             <span class="ck_warn bookPrice_warn">상품 가격을 입력해주세요.</span>
                         </div>
                     </div>
@@ -106,7 +103,7 @@
                             <label>상품 재고</label>
                         </div>
                         <div class="form_section_content">
-                            <input name="bookStock" value="0">
+                            <input name="bookStock" value="0" th:value="${goodsInfo.bookStock}">
                             <span class="ck_warn bookStock_warn">상품 재고를 입력해주세요.</span>
                         </div>
                     </div>
@@ -115,7 +112,7 @@
                             <label>상품 할인율</label>
                         </div>
                         <div class="form_section_content">
-                            <input id="discount_interface" maxlength="2" value="0">
+                            <input id="discount_interface" maxlength="2" value="0" th:value="${goodsInfo.bookDiscount}">
                             <input name="bookDiscount" type="hidden" value="0">
                             <span class="step_val">할인 가격 : <span class="span_discount"></span></span>
                             <span class="ck_warn bookDiscount_warn">1~99 숫자를 입력해주세요.</span>
@@ -126,7 +123,7 @@
                             <label>책 소개</label>
                         </div>
                         <div class="form_section_content">
-                            <textarea name="bookIntro" id="bookIntro_textarea"></textarea>
+                            <textarea name="bookIntro" id="bookIntro_textarea" th:value="${goodsInfo.bookIntro}" th:text="${goodsInfo.bookIntro}"></textarea>
                             <span class="ck_warn bookIntro_warn">책 소개를 입력해주세요.</span>
                         </div>
                     </div>
@@ -135,7 +132,7 @@
                             <label>책 목차</label>
                         </div>
                         <div class="form_section_content">
-                            <textarea name="bookContents" id="bookContents_textarea"></textarea>
+                            <textarea name="bookContents" id="bookContents_textarea" th:value="${goodsInfo.bookContents}" th:text="${goodsInfo.bookContents}"></textarea>
                             <span class="ck_warn bookContents_warn">책 목차를 입력해주세요.</span>
                         </div>
                     </div>
@@ -147,10 +144,8 @@
             </div>
         </div>
 
-
         <!-- Footer 영역 -->
         <th:block th:replace="admin/fragments/footer :: adminFooter"></th:block>
-
 
     </div>    <!-- class="wrap" -->
 </div>    <!-- class="wrapper" -->
@@ -273,13 +268,11 @@
         }
 
         if(bookNameCk && authorIdCk && publeYearCk && publisherCk && cateCodeCk && priceCk && stockCk && discountCk && introCk && contentsCk ){
-            //alert('통과');
-            enrollForm.submit();
+            document.getElementById("enrollForm").submit();
         } else {
             return false;
-        }
 
-        document.getElementById("enrollForm").submit();
+        }
     }
 
     /* ]] */
@@ -303,15 +296,15 @@
     /* datePicker */
     const config = {
         dateFormat: 'yy-mm-dd',
-        showOn : "button",
-        buttonText:"날짜 선택",
+        showOn: "button",
+        buttonText: "날짜 선택",
         prevText: '이전 달',
         nextText: '다음 달',
-        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
-        monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
-        dayNames: ['일','월','화','수','목','금','토'],
-        dayNamesShort: ['일','월','화','수','목','금','토'],
-        dayNamesMin: ['일','월','화','수','목','금','토'],
+        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
         yearSuffix: '년',
         changeMonth: true,
         changeYear: true
@@ -320,6 +313,8 @@
     $(function () {
         $("input[name='publeYear']").datepicker(config);
     });
+
+
 
     /* 작가 선택 팝업 창 */
     document.getElementById("authorIdBtn").addEventListener("click", function () {
@@ -332,6 +327,109 @@
 
         window.open(popUrl, "작가 찾기", popOption);
     });
+
+    /* ![CDATA[ */
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        let bookDiscount = [[ ${goodsInfo.bookDiscount}]] * 100;
+
+        let cateList = JSON.parse([[ ${cateList}]]);
+
+        cate1Array = new Array();
+        cate2Array = new Array();
+        cate3Array = new Array();
+
+        cate1Obj = new Object();
+        cate2Obj = new Object();
+        cate3Obj = new Object();
+
+        cateSelect1 = document.getElementById('cate1');
+        cateSelect2 = document.getElementById('cate2');
+        cateSelect3 = document.getElementById('cate3');
+
+        function makeCateArray(obj, array, cateList, tier) {
+            for (let i = 0; i < cateList.length; i++) {
+                if (cateList[i].tier === tier) {
+                    obj = new Object();
+                    obj.cateName = cateList[i].cateName;
+                    obj.cateCode = cateList[i].cateCode;
+                    obj.cateParent = cateList[i].cateParent;
+
+                    array.push(obj);
+                }
+            }
+        }
+
+        makeCateArray(cate1Obj, cate1Array, cateList, 1);
+        makeCateArray(cate2Obj, cate2Array, cateList, 2);
+        makeCateArray(cate3Obj, cate3Array, cateList, 3);
+
+        let targetCode3 = [[ ${goodsInfo.cateCode}]];
+
+        while (cateSelect3.firstChild) {
+            cateSelect3.firstChild.remove();
+        }
+
+        while (cateSelect2.firstChild) {
+            cateSelect2.firstChild.remove();
+        }
+
+        while (cateSelect1.firstChild) {
+            cateSelect1.firstChild.remove();
+        }
+
+        for (let i = 0; i < cate3Array.length; i++) {
+            if (targetCode3 === cate3Array[i].cateCode) {
+                targetCode3 = cate3Array[i];
+                let option = document.createElement("option");
+                let optionText = document.createTextNode(targetCode3.cateName);
+                option.appendChild(optionText);
+                option.value = targetCode3.cateCode;
+                option.selected = true;
+                cateSelect3.appendChild(option);
+            }
+        }
+
+        let targetCode2 = targetCode3.cateParent;
+
+        for (let i = 0; i < cate2Array.length; i++) {
+            if (targetCode2 === cate2Array[i].cateCode) {
+                targetCode2 = cate2Array[i];
+                let option = document.createElement("option");
+                let optionText = document.createTextNode(targetCode2.cateName);
+                option.appendChild(optionText);
+                option.value = targetCode2.cateCode;
+                option.selected = true;
+                cateSelect2.appendChild(option);
+            }
+        }
+
+        let targetCode1 = targetCode2.cateParent;
+
+        for (let i = 0; i < cate1Array.length; i++) {
+            if (targetCode1 === cate1Array[i].cateCode) {
+                targetCode1 = cate1Array[i];
+                let option = document.createElement("option");
+                let optionText = document.createTextNode(targetCode1.cateName);
+                option.appendChild(optionText);
+                option.value = targetCode1.cateCode;
+                option.selected = true;
+                cateSelect1.appendChild(option);
+            }
+        }
+
+
+        document.getElementById("discount_interface").value = bookDiscount;
+
+    });
+
+
+    /* ]] */
+
+</script>
+
+<script th:inline="javascript">
 
     /* ![CDATA[ */
 
@@ -369,13 +467,6 @@
     makeCateArray(cate1Obj,cate1Array,cateList,1);
     makeCateArray(cate2Obj,cate2Array,cateList,2);
     makeCateArray(cate3Obj,cate3Array,cateList,3);
-
-    // $(document).ready(function(){
-    //     console.log(cate1Array);
-    //     console.log(cate2Array);
-    //     console.log(cate3Array);
-    // });
-
 
     for (let i = 0; i < cate1Array.length; i++) {
         let option = document.createElement('option');
@@ -442,24 +533,21 @@
 
     let bookDiscount = $("#discount_interface").val();
     /* 할인율 Input 설정 */
+
     $("#discount_interface").on("propertychange change keyup paste input", function(){
 
         let userInput = $("#discount_interface");
         let discountInput = $("input[name='bookDiscount']");
 
-        let discountRate = userInput.val();					// 사용자가 입력할 할인값
-        let sendDiscountRate = discountRate / 100;					// 서버에 전송할 할인값
-
+        let discountRate = userInput.val();					// 사용자가 입력한 할인값
+        let sendDiscountRate = discountRate / 100;			// 서버에 전송할 할인값
         let goodsPrice = $("input[name='bookPrice']").val();			// 원가
         let discountPrice = goodsPrice * (1 - sendDiscountRate);		// 할인가격
 
-        if(!isNaN(bookDiscount)) {
-
+        if(!isNaN(discountRate)){
             $(".span_discount").html(discountPrice);
-
             discountInput.val(sendDiscountRate);
         }
-
     });
 
     $("input[name='bookPrice']").on("change", function(){
@@ -472,8 +560,7 @@
         let goodsPrice = $("input[name='bookPrice']").val();			// 원가
         let discountPrice = goodsPrice * (1 - sendDiscountRate);		// 할인가격
 
-        if(!isNaN(bookDiscount)) {
-
+        if(!isNaN(discountRate)){
             $(".span_discount").html(discountPrice);
         }
     });
