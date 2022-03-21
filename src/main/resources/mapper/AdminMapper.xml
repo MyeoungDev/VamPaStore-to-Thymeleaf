@@ -81,7 +81,8 @@
     </select>
 
     <update id="goodsModify">
-        UPDATE vam_book
+        UPDATE
+            vam_book
         SET
             bookName = #{bookName},
             authorId = #{authorId},

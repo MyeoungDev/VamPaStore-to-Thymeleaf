@@ -111,7 +111,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/goodsModify", method = RequestMethod.POST)
-    public String goodsModifyPOST(BookVO book, RedirectAttributes rttr) {
+    public String goodsModifyPOST(
+            BookVO book,
+            RedirectAttributes rttr
+    ) {
 
         logger.info("goodsModifyPOST............" + book);
 

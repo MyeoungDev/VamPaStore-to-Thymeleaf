@@ -25,6 +25,7 @@
         <div class="admin_content_wrap">
             <div class="admin_content_main">
                 <form action="/admin/goodsModify" method="post" id="enrollForm">
+                    <input type="hidden" name="bookId" th:value="${goodsInfo.bookId}">
                     <div class="form_section">
                         <div class="form_section_title">
                             <label>책 제목</label>
@@ -39,7 +40,7 @@
                             <label>작가</label>
                         </div>
                         <div class="form_section_content">
-                            <input id="authorName_input" readonly="readonly" th:value="${goodsInfo.authorName}">
+                            <input id="authorName_input" readonly="readonly" name="authorName" th:value="${goodsInfo.authorName}">
                             <input id="authorId_input" name="authorId" type="hidden" th:value="${goodsInfo.authorId}">
                             <button class="authorId_btn" id="authorIdBtn">작가 선택</button>
                             <span class="ck_warn authorId_warn">작가를 선택해주세요</span>
