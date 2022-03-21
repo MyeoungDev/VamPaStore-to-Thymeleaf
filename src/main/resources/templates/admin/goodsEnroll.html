@@ -137,6 +137,16 @@
                         <span class="ck_warn bookContents_warn">책 목차를 입력해주세요.</span>
                     </div>
                 </div>
+                <!-- MultipartResolver -->
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>상품 이미지</label>
+                    </div>
+                    <div class="form_section_content">
+                        <input type="file" id="fileItem" name="uploadFile" style="height: 30px">
+                        <!-- 만약 파일 여러개 선택을 허용하고 싶으면 <input type="file" multiple> 속성 추가-->
+                    </div>
+                </div>
             </form>
             <div class="btn_section">
                 <button id="cancelBtn" class="btn">취 소</button>
@@ -460,7 +470,7 @@
 
     });
 
-    $("input[name='bookPrice']").on("change", function(){
+    $("input[name='bookPrice']").on("change", function () {
 
         let userInput = $("#discount_interface");
         let discountInput = $("input[name='bookDiscount']");
@@ -470,10 +480,15 @@
         let goodsPrice = $("input[name='bookPrice']").val();			// 원가
         let discountPrice = goodsPrice * (1 - sendDiscountRate);		// 할인가격
 
-        if(!isNaN(bookDiscount)) {
+        if (!isNaN(bookDiscount)) {
 
             $(".span_discount").html(discountPrice);
         }
+    });
+
+    /* 이미지 업로드 */
+    document.querySelector("input[type=file]").addEventListener("change", function () {
+        alert("동작");
     });
 
 

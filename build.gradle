@@ -28,6 +28,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'	/* SMTP 이메일 수신 */
 	implementation 'org.springframework.boot:spring-boot-starter-security'	/* Spring security */
 	implementation 'com.google.code.gson:gson:2.8.6'	/* GSON */
+	implementation 'commons-io:commons-io:2.11.0'	/* Apache commons-io */
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4' /* Apache Commons FileUpload */
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
