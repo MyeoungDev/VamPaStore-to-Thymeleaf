@@ -125,6 +125,18 @@ public class AdminController {
         return "redirect:/admin/goodsManage";
     }
 
+    @RequestMapping(value = "/goodsDelete", method = RequestMethod.POST)
+    public String goodsDeletePOST(int bookId, RedirectAttributes rttr) {
+
+        logger.info("goodsDeletePOST.........." + bookId);
+
+        int result = adminService.goodsDelete(bookId);
+
+        rttr.addFlashAttribute("goodsDelete_result", result);
+
+        return "redirect:/admin/goodsManage";
+    }
+
 
     /* 작가 등록 페이지 접속 */
     @RequestMapping(value = "authorEnroll", method = RequestMethod.GET)

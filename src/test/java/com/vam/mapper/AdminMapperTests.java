@@ -80,4 +80,20 @@ public class AdminMapperTests {
         mapper.goodsModify(book);
 
     }
+
+    @Test
+    public void goodsDeleteTest() {
+
+        int bookId = 953;
+        int result = mapper.goodsDelete(bookId);
+
+        if (result == 1) {
+            System.out.println("삭제 성공");
+        } else {
+            System.out.println("삭제 실패");
+        } 
+
+
+    }
 }
+

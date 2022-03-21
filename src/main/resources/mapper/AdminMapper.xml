@@ -98,4 +98,8 @@
         WHERE bookId = #{bookId}
     </update>
 
+    <delete id="goodsDelete">
+        DELETE FROM vam_book WHERE bookId = #{bookId}
+    </delete>
+
 </mapper>

@@ -110,12 +110,21 @@
     document.addEventListener("DOMContentLoaded", function () {
         let bookEnrollResult = [[${bookEnroll_result}]];
 
-        let bookModifyResult =[[ ${goodsModify_result} ]];
+        let bookModifyResult = [[ ${goodsModify_result}]];
+
+        let bookDeleteResult = [[ ${goodsDelete_result}]];
+
 
         if (bookModifyResult === null || bookModifyResult === '') {
             console.log(bookModifyResult);
         } else {
             alert("상품 " + [[ ${goodsModify_result}]] + "을 수정하였습니다.");
+        }
+
+        if (bookDeleteResult === null || bookDeleteResult === '') {
+            console.log(bookDeleteResult);
+        } else {
+            alert("상품 삭제에 성공하였습니다.");
         }
 
         checkBookEnroll(bookEnrollResult);

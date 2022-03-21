@@ -293,3 +293,10 @@ input[name='publeYear'] {
     padding-top: 5px;
     font-weight: 500;
 }
+
+.delete_btn{
+    background-color: #efcdcd;
+}
+.delete_btn:hover{
+    background-color : #e4a7a7;
+}

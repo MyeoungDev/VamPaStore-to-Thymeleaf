@@ -61,4 +61,11 @@ public class AdminServiceImpl implements AdminService{
 
         return adminMapper.goodsModify(book);
     }
+
+    @Override
+    public int goodsDelete(int bookId) {
+        logger.info("Service goodsDelete");
+
+        return adminMapper.goodsDelete(bookId);
+    }
 }

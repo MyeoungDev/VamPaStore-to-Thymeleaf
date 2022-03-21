@@ -24,7 +24,8 @@
         <th:block th:replace="admin/fragments/header :: adminHeader"></th:block>
         <div class="admin_content_wrap">
             <div class="admin_content_main">
-                <form action="/admin/goodsModify" method="post" id="enrollForm">
+<!--                <form action="/admin/goodsModify" method="post" id="enrollForm">-->
+                <form method="post" id="enrollForm">
                     <input type="hidden" name="bookId" th:value="${goodsInfo.bookId}">
                     <div class="form_section">
                         <div class="form_section_title">
@@ -140,7 +141,8 @@
                 </form>
                 <div class="btn_section">
                     <button id="cancelBtn" class="btn">취 소</button>
-                    <button id="enrollBtn" class="btn enroll_btn" th:onclick="enrollFunc()">등 록</button>
+                    <button id="enrollBtn" class="btn enroll_btn" th:onclick="enrollFunc()">수 정</button>
+                    <button id="deleteBtn" class="btn delete_btn" th:onclick="deleteFunc()">삭 제</button>
                 </div>
             </div>
         </div>
@@ -159,6 +161,15 @@
     });
 
     /* ![CDATA[ */
+
+    function deleteFunc() {
+        event.preventDefault();
+
+        let deleteForm = document.getElementById("enrollForm");
+        deleteForm.action = "/admin/goodsDelete";
+        deleteForm.submit();
+
+    }
 
     /* 등록 Function */
     function enrollFunc() {
@@ -269,7 +280,10 @@
         }
 
         if(bookNameCk && authorIdCk && publeYearCk && publisherCk && cateCodeCk && priceCk && stockCk && discountCk && introCk && contentsCk ){
-            document.getElementById("enrollForm").submit();
+            // document.getElementById("enrollForm").submit();
+            let modifyForm = document.getElementById("enrollForm");
+            modifyForm.action = "/admin/goodsModify";
+            modifyForm.submit();
         } else {
             return false;
 
