@@ -232,6 +232,25 @@ public class AdminController {
         return "redirect:/admin/authorManage";
     }
 
+    @RequestMapping(value = "/authorDelete", method = RequestMethod.POST)
+    public String authorDeletePOST(int authorId, RedirectAttributes rttr) {
+        logger.info("authorDeletePOST" + authorId);
+
+        int result = 0;
+
+        try {
+            result = authorService.authorDelete(authorId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = 2;
+            rttr.addFlashAttribute("delete_result", result);
+        }
+
+        rttr.addFlashAttribute("delete_result", result);
+
+        return "redirect:/admin/authorManage";
+    }
+
 
     /* 상품 등록 */
     @RequestMapping(value = "/goodsEnroll", method = RequestMethod.POST)

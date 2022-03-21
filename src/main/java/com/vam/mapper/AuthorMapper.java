@@ -24,4 +24,7 @@ public interface AuthorMapper {
     /* 작가 수정 */
     public int authorModify(AuthorVO author);
 
+    /* 작가 삭제*/
+    public int authorDelete(int authorId);
+
 }

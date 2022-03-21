@@ -20,7 +20,7 @@
     <div class="admin_content_wrap">
       <div class="admin_content_subject"><span>작가 상세</span></div>
       <div class="admin_content_main">
-        <form id="modifyForm" action="/admin/authorModify" method="post">
+        <form id="modifyForm" method="post">
         <div class="form_section">
           <p th:text="${authorInfo}"></p>
           <p th:text="${cri}"></p>
@@ -80,6 +80,7 @@
         <div class="btn_section" th:with="num = ${cri.pageNum}">
           <button id="cancelBtn" class="btn" th:onclick="moveManagePage([[ ${cri.makeQueryString(num)} ]])">작가 목록</button>
           <button id="modifyBtn" class="btn modify_btn" th:onclick="submitFunc()">수 정</button>
+          <button id="deleteBtn" class="btn delete_btn" th:onclick="deleteFunc()">삭 제</button>
         </div>
         </form>
       </div>
@@ -124,13 +125,22 @@
     }
 
     if (nameCheck && introCheck) {
-      document.getElementById("modifyForm").submit();
+      let modifyForm = document.getElementById("modifyForm");
+      modifyForm.action = "/admin/authorModify";
+      modifyForm.submit();
     } else {
       return false;
     }
 
   }
-  // TODO -> 그냥 Controller에서 null or '' 이 있으면 result Model로 가져와서 alert창으로 끝낼까?
+
+  function deleteFunc() {
+    event.preventDefault();
+
+    let deleteForm = document.getElementById("modifyForm");
+    deleteForm.action = "/admin/authorDelete";
+    deleteForm.submit();
+  }
 
 
 </script>

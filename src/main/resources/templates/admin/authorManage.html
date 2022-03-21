@@ -118,11 +118,14 @@
     document.addEventListener("DOMContentLoaded", function () {
         let enrollResult = [[${enroll_result}]];
         let modifyResult = [[${modify_result}]];
+        let deleteResult = [[${delete_result}]];
         console.log(enrollResult);
         console.log(modifyResult);
         checkEnrollResult(enrollResult);
 
         checkModifyResult(modifyResult);
+
+        checkDeleteResult(deleteResult);
 
         function checkEnrollResult(enrollResult) {
             if (enrollResult === null) {
@@ -136,6 +139,14 @@
                 alert("작가 정보 수정을 완료하였습니다.");
             } else if (modifyResult == 0) {
                 alert("작가 정보 수정을 실패하였습니다.")
+            }
+        }
+
+        function checkDeleteResult(deleteResult) {
+            if (deleteResult == 1) {
+                alert("작가 삭제에 성공하였습니다.")
+            } else if (deleteResult == 2) {
+                alert("해당 작가 데이터를 사용하고 있어 삭제 할 수 없습니다.");
             }
         }
     });

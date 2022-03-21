@@ -77,6 +77,21 @@ public class AuthorMapperTests {
         System.out.println("수정 후.........." + authorMapper.authorGetDetail(test.getAuthorId()));
     }
 
+    @Test
+    public void authorDeleteTest() {
+
+        int authorId = 8156;
+        int result = authorMapper.authorDelete(authorId);
+
+        if (result == 1) {
+            System.out.println("작가 삭제 성공");
+        } else {
+            System.out.println("작가 삭제 실패");
+        }
+
+    }
+
+
 
 
 

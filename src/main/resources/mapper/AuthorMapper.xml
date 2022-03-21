@@ -63,4 +63,8 @@
         WHERE
             authorId = #{authorId}
     </update>
+
+    <delete id="authorDelete">
+        DELETE FROM vam_author WHERE authorId = #{authorId}
+    </delete>
 </mapper>
