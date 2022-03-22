@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.vam.domain.*;
 import com.vam.service.AdminService;
 import com.vam.service.AuthorService;
-import org.dom4j.rule.Mode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.model.IModel;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -285,6 +287,45 @@ public class AdminController {
         PageDTO pageMaker = new PageDTO(cri, total);
 
         model.addAttribute("pageMaker", pageMaker);
+
+    }
+
+    /* 첨부파일 업로드 */
+    @RequestMapping(value = "uploadAjaxAction", method = RequestMethod.POST)
+    public void uploadAjaxActionPOST(MultipartFile[] uploadFile) {
+        logger.info("uploadAjaxActionPOST............");
+
+        String uploadFolder = "C:\\upload";
+
+        // 날짜 데이터를 지정된 문자열 형식으로 변환 or 날짜 문자열 데이터를 날짜 데이터로 변환
+        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String str = sdt.format(date);
+        // '-'을 경로 구분자로 변경하기 위함. File.separator 은 운영체제 환경에 맞게 변경해줌
+        String datePath = str.replace("-", File.separator);
+
+        // File 클래스의 역할 Java에서 파일 혹은 디렉토리에 관한 작업을 할 수 있도록 여러 메서드와 변수를 제공해주는 클래스
+
+        /* 폴더 생성 */
+        File uploadPath = new File(uploadFolder, datePath);
+        if (uploadPath.exists() == false) {
+            uploadPath.mkdirs();
+        }
+
+        for (MultipartFile multipartFile : uploadFile) {
+            /* 파일 이름 */
+            String uploadFileName = multipartFile.getOriginalFilename();
+
+            /* 파일 위치, 파일 이름을 합친 File 객체 */
+            File saveFile = new File(uploadPath, uploadFileName);
+
+            try {
+                multipartFile.transferTo(saveFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
 }

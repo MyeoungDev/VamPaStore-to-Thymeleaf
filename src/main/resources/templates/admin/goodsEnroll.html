@@ -488,8 +488,56 @@
 
     /* 이미지 업로드 */
     document.querySelector("input[type=file]").addEventListener("change", function () {
-        alert("동작");
+
+        let formData = new FormData();  // 첨부파일을 서버로 전송하기 위한 객체 == 쉽게 말해 가상의 form 태그
+        let fileInput = document.querySelector("input[name=uploadFile]");
+        let fileList = fileInput.files;
+        let fileObj = fileList[0];
+
+        if (!fileCheck(fileList[0].name, fileList[0].size)) {
+            return false;
+        }
+
+        formData.append("uploadFile", fileObj);
+
+        $.ajax({
+            url: '/admin/uploadAjaxAction',
+            processData: false,     // false로 선언 시 formData를 String으로 변환하지 않음
+            contentType: false,     // false로 선언 시 content-type 헤더가 multipart/form-data로 전송하게 됨
+            data: formData,
+            // enctype: 'multipart/form-data',
+            type: 'POST',
+            dateType: 'json',
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+
+        console.log("fileList: " + fileList);
+        console.log("fileList[0].name" + fileList[0].name);
+        console.log("fileList[0].size" + fileList[0].size);
+        console.log("fileList[0].type" + fileList[0].type);
+
+
     });
+
+    let regex = new RegExp("(.*?)\.(jpg|jpeg|png)$");    // 파일 형식 jpg, jpeg, png 이미지 파일로 제한
+    let maxSize = 1048576; //1MB
+
+    function fileCheck(fileName, fileSize) {
+
+        if (fileSize >= maxSize) {
+            alert("파일 사이즈 초과");
+            return false;
+        }
+        if (!regex.test(fileName)) {
+            alert("해당 종류의 파일은 업로드할 수 없습니다.");
+            return false;
+        }
+
+        return true;
+    }
 
 
     /* ]] */
