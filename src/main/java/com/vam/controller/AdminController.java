@@ -4,9 +4,12 @@ import com.google.gson.Gson;
 import com.vam.domain.*;
 import com.vam.service.AdminService;
 import com.vam.service.AuthorService;
+import net.coobird.thumbnailator.Thumbnails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +18,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -290,10 +300,32 @@ public class AdminController {
 
     }
 
+    /* TODO -> 현제 Date, UUID 파일 업로드 and Thumbnail 만들기 두가지 방식 다시 공부하면서 정리해서 올리기 */
+
     /* 첨부파일 업로드 */
     @RequestMapping(value = "uploadAjaxAction", method = RequestMethod.POST)
-    public void uploadAjaxActionPOST(MultipartFile[] uploadFile) {
+    public ResponseEntity<List<AttachImageVo>> uploadAjaxActionPOST(MultipartFile[] uploadFile) {
         logger.info("uploadAjaxActionPOST............");
+
+
+        /* 이미지 파일 체크 */
+        for (MultipartFile multipartFile : uploadFile) {
+            File checkFile = new File(multipartFile.getOriginalFilename());
+            String type = null;
+
+            try {
+                type = Files.probeContentType(checkFile.toPath());
+                logger.info("MIME Type : " + type);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (!type.startsWith("image")) {
+                List<AttachImageVo> list = null;
+                return new ResponseEntity<>(list, HttpStatus.BAD_REQUEST);
+            }
+
+        }
 
         String uploadFolder = "C:\\upload";
 
@@ -312,20 +344,69 @@ public class AdminController {
             uploadPath.mkdirs();
         }
 
+        List<AttachImageVo> list = new ArrayList<>();
+
         for (MultipartFile multipartFile : uploadFile) {
+
+            /* 이미지 정보 객체 */
+            AttachImageVo vo = new AttachImageVo();
+
             /* 파일 이름 */
             String uploadFileName = multipartFile.getOriginalFilename();
+            vo.setFileName(uploadFileName);
+            vo.setUploadPath(datePath);
+
+            /* UUID 적용 파일 이름 */     // UUID(범용 고유 식별자): 국제기구에서 표준으로 정한 식별자(일련번호)
+            String uuid = UUID.randomUUID().toString();
+            vo.setUuid(uuid);
+
+            uploadFileName = uuid + "_" + uploadFileName;
 
             /* 파일 위치, 파일 이름을 합친 File 객체 */
             File saveFile = new File(uploadPath, uploadFileName);
 
             try {
                 multipartFile.transferTo(saveFile);
+
+//                File thumbnailFile = new File(uploadPath, "s_" + uploadFileName);
+//
+//                BufferedImage bo_image = ImageIO.read(saveFile);    // bo_image = buffered original img
+//                /* 비율 */
+//                double ratio = 3;
+//                int width = (int) (bo_image.getWidth() / ratio);
+//                int height = (int) (bo_image.getHeight() / ratio);
+//
+//                // 생성자 매개변수 넓이, 높이, 생성될 이미지 타입
+//                BufferedImage bt_image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+//
+//                Graphics2D graphic = bt_image.createGraphics();
+//
+//                graphic.drawImage(bo_image, 0, 0, width, height, null);
+//
+//                ImageIO.write(bt_image, "jpg", thumbnailFile);
+
+                /* 방법 2 thumbnailator 사용 */
+
+                File thumbnailFile = new File(uploadPath, "s_" + uploadFileName);
+
+                BufferedImage bo_img = ImageIO.read(saveFile);
+                double ratio = 3;
+                int width = (int) (bo_img.getWidth() / ratio);
+                int height = (int) (bo_img.getHeight() / ratio);
+
+                Thumbnails.of(saveFile)
+                        .size(width, height)
+                        .toFile(thumbnailFile);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            list.add(vo);
 
         }
+        ResponseEntity<List<AttachImageVo>> result = new ResponseEntity<List<AttachImageVo>>(list, HttpStatus.OK);
 
+        return result;
     }
+
 }

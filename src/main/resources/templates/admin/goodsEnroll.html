@@ -486,6 +486,8 @@
         }
     });
 
+
+
     /* 이미지 업로드 */
     document.querySelector("input[type=file]").addEventListener("change", function () {
 
@@ -499,17 +501,18 @@
         }
 
         formData.append("uploadFile", fileObj);
-
         $.ajax({
             url: '/admin/uploadAjaxAction',
             processData: false,     // false로 선언 시 formData를 String으로 변환하지 않음
             contentType: false,     // false로 선언 시 content-type 헤더가 multipart/form-data로 전송하게 됨
             data: formData,
-            // enctype: 'multipart/form-data',
             type: 'POST',
             dateType: 'json',
             error: function (error) {
-                console.log(error);
+                alert("이미지 파일이 아닙니다.");
+            },
+            success: function (result) {
+                console.log(result);
             }
         });
 
