@@ -52,4 +52,7 @@ public class BookVO {
     /* 수정 날짜 */
     private Date updateDate;
 
+    /* 이미지 정보 */
+
+
 }

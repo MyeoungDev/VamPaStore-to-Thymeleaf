@@ -145,6 +145,12 @@
                     <div class="form_section_content">
                         <input type="file" id="fileItem" name="uploadFile" style="height: 30px">
                         <!-- 만약 파일 여러개 선택을 허용하고 싶으면 <input type="file" multiple> 속성 추가-->
+                        <div id="uploadResult">
+<!--                            <div id="result_card">-->
+<!--                                <div class="imgDeleteBtn">x</div>-->
+<!--                                <img src="/display?fileName=img_1.jpg">-->
+<!--                            </div>-->
+                        </div>
                     </div>
                 </div>
             </form>
@@ -491,6 +497,10 @@
     /* 이미지 업로드 */
     document.querySelector("input[type=file]").addEventListener("change", function () {
 
+        if (document.getElementsByClassName("imgDeleteBtn").length > 0) {
+            deleteFile();
+        }
+
         let formData = new FormData();  // 첨부파일을 서버로 전송하기 위한 객체 == 쉽게 말해 가상의 form 태그
         let fileInput = document.querySelector("input[name=uploadFile]");
         let fileList = fileInput.files;
@@ -513,6 +523,7 @@
             },
             success: function (result) {
                 console.log(result);
+                showUploadImage(result);
             }
         });
 
@@ -542,6 +553,65 @@
         return true;
     }
 
+    /* 이미지 출력 */
+    function showUploadImage(uploadResultArr) {
+
+        /* 전달받은 데이터 검증 */
+        if (uploadResultArr == null || uploadResultArr.length === 0) {
+            return;
+        }
+
+        let uploadResult = document.getElementById("uploadResult");
+
+        let obj = uploadResultArr[0];
+        let str = "";
+
+        /* encodeURIComponet() 메서드는 다음 문자 A-Z a-z 0-9 - _ . ! ~ * ' ( ) 을 제외한 모든 문자를
+        * UTF-8로 인코딩하여 이스케이프 문자로 변환해준다.
+        * */
+
+        /* replace 적용 => 동작 o */
+        // let fileCallPath = encodeURIComponent(obj.uploadPath.replace(/\\/g, '/') + "/s_" + obj.uuid + "_" + obj.fileName);
+
+        /* replace 적용 x => 동작 o */
+        /* encodeURIComponent() 메서드는 /, \ 문자 또한 인코딩하기 때문에 replace()메서드를 사용 안해도 된다.*/
+        let fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+
+
+        str = `<div id="result_card">
+                <img src="/display?fileName=${fileCallPath}">
+                <div class="imgDeleteBtn" data-file="${fileCallPath}" onclick="deleteFile()">x</div>
+            </div>`;
+
+        uploadResult.innerHTML = str
+
+    }
+
+    /* 파일 삭제 메서드 */
+    function deleteFile() {
+        let target = document.querySelector("div.imgDeleteBtn");
+        let targetFile = target.dataset.file;
+
+        let targetDiv = document.getElementById("result_card");
+
+        $.ajax({
+            url: '/admin/deleteFile',
+            data: {fileName: targetFile},
+            dataType: 'text',
+            type: 'POST',
+            success: function (result) {
+                console.log(result);
+                targetDiv.remove();
+                document.querySelector("input[type=file]").value = "";
+            },
+            error: function (error) {
+                console.log(error);
+                alert("파일을 삭제하지 못하였습니다.");
+            }
+        })
+
+
+    }
 
     /* ]] */
 

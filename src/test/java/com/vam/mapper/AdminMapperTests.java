@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -92,8 +95,19 @@ public class AdminMapperTests {
         } else {
             System.out.println("삭제 실패");
         } 
+    }
 
+    @Test
+    public void test() {
+        Date date = new Date();
+        System.out.println("date = " + date);
 
+        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd");
+        String formatDate = sdt.format(date);
+        System.out.println("sdt = " + formatDate);
+
+        String datePath = formatDate.replace("-", File.separator);
+        System.out.println("datePath = " + datePath);
     }
 }
 

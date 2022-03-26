@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -300,7 +302,9 @@ public class AdminController {
 
     }
 
-    /* TODO -> 현제 Date, UUID 파일 업로드 and Thumbnail 만들기 두가지 방식 다시 공부하면서 정리해서 올리기 */
+    /* TODO -> 현제 Date, UUID 파일 업로드 까지 완료
+       TODO -> Thumbnail 만들기 두가지 방식, ResponseEntity or ResponseEntity 따로 공부해서 글 작성
+     */
 
     /* 첨부파일 업로드 */
     @RequestMapping(value = "uploadAjaxAction", method = RequestMethod.POST)
@@ -409,4 +413,32 @@ public class AdminController {
         return result;
     }
 
+    @PostMapping(value = "/deleteFile")
+    public ResponseEntity<String> deleteFile(String fileName) {
+        logger.info("deleteFile......." + fileName);
+
+        File file = null;
+
+        try {
+            /* 썸네일 파일 삭제 */
+            file = new File("c:\\upload\\" + URLDecoder.decode(fileName, "UTF-8"));
+
+            file.delete();
+
+            /* 원본 파일 삭제 */
+            String originalFileName = file.getAbsolutePath().replace("s_", "");
+
+            logger.info("orginalFileName : " + originalFileName);
+
+            file = new File(originalFileName);
+
+            file.delete();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<String>("Success", HttpStatus.OK);
+    }
 }
