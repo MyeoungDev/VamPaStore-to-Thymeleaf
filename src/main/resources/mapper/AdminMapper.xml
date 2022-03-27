@@ -3,7 +3,8 @@
 <mapper namespace="com.vam.mapper.AdminMapper">
 
     <!-- 작가 등록 -->
-    <insert id="bookEnroll" parameterType="com.vam.domain.BookVO">
+    <insert id="bookEnroll" parameterType="com.vam.domain.BookVO" useGeneratedKeys="true" keyProperty="bookId">
+
         INSERT INTO vam_book (
             bookName,
             authorId,
@@ -28,6 +29,11 @@
             #{bookIntro},
             #{bookContents}
         )
+
+        <selectKey resultType="int" keyProperty="bookId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
     </insert>
 
     <!-- 카테고리 리스트 -->
@@ -101,5 +107,9 @@
     <delete id="goodsDelete">
         DELETE FROM vam_book WHERE bookId = #{bookId}
     </delete>
+
+    <insert id="imageEnroll" parameterType="com.vam.domain.AttachImageVo">
+        INSERT INTO vam_image(bookId, fileName, uploadPath, uuid) VALUE (#{bookId}, #{fileName}, #{uuid}, #{uploadPath})
+    </insert>
 
 </mapper>

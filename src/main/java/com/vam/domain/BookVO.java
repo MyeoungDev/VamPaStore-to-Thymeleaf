@@ -3,6 +3,7 @@ package com.vam.domain;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class BookVO {
@@ -53,6 +54,6 @@ public class BookVO {
     private Date updateDate;
 
     /* 이미지 정보 */
-
+    private List<AttachImageVo> imageList;
 
 }

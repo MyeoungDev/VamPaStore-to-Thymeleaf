@@ -1,5 +1,6 @@
 package com.vam.mapper;
 
+import com.vam.domain.AttachImageVo;
 import com.vam.domain.BookVO;
 import com.vam.domain.CateVO;
 import com.vam.domain.Criteria;
@@ -30,4 +31,7 @@ public interface AdminMapper {
 
     /* 상품 삭제 */
     public int goodsDelete(int bookId);
+
+    /* 이미지 등록 */
+    public void imageEnroll(AttachImageVo vo);
 }

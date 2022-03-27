@@ -1,5 +1,6 @@
 package com.vam.service;
 
+import com.vam.domain.AttachImageVo;
 import com.vam.domain.BookVO;
 import com.vam.domain.CateVO;
 import com.vam.domain.Criteria;
@@ -7,6 +8,7 @@ import com.vam.mapper.AdminMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +26,23 @@ public class AdminServiceImpl implements AdminService{
 
         logger.info("(service) bookEnroll...........");
 
+        if (book.getImageList() == null || book.getImageList().size() < 0) {
+            return;
+        }
+
+//        book.getImageList().forEach(attach ->{
+//            attach.setBookId(book.getBookId());
+//            adminMapper.imageEnroll(attach);
+//        });
+
+
         adminMapper.bookEnroll(book);
 
+        for (AttachImageVo attachImageVo : book.getImageList()) {
+            attachImageVo.setBookId(book.getBookId());
+
+            adminMapper.imageEnroll(attachImageVo);
+        }
     }
 
     @Override

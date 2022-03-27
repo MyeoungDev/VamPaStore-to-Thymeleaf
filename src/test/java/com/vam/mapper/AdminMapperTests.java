@@ -1,5 +1,6 @@
 package com.vam.mapper;
 
+import com.vam.domain.AttachImageVo;
 import com.vam.domain.BookVO;
 import com.vam.domain.Criteria;
 import org.junit.jupiter.api.Test;
@@ -98,16 +99,16 @@ public class AdminMapperTests {
     }
 
     @Test
-    public void test() {
-        Date date = new Date();
-        System.out.println("date = " + date);
+    public void imageEnrollTest() {
+        AttachImageVo vo = new AttachImageVo();
 
-        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd");
-        String formatDate = sdt.format(date);
-        System.out.println("sdt = " + formatDate);
+        vo.setBookId(137);
+        vo.setFileName("test");
+        vo.setUuid("test");
+        vo.setUploadPath("test");
 
-        String datePath = formatDate.replace("-", File.separator);
-        System.out.println("datePath = " + datePath);
+        mapper.imageEnroll(vo);
     }
+
 }
 

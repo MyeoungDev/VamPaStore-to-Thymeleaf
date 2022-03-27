@@ -302,10 +302,6 @@ public class AdminController {
 
     }
 
-    /* TODO -> 현제 Date, UUID 파일 업로드 까지 완료
-       TODO -> Thumbnail 만들기 두가지 방식, ResponseEntity or ResponseEntity 따로 공부해서 글 작성
-     */
-
     /* 첨부파일 업로드 */
     @RequestMapping(value = "uploadAjaxAction", method = RequestMethod.POST)
     public ResponseEntity<List<AttachImageVo>> uploadAjaxActionPOST(MultipartFile[] uploadFile) {
@@ -371,25 +367,6 @@ public class AdminController {
 
             try {
                 multipartFile.transferTo(saveFile);
-
-//                File thumbnailFile = new File(uploadPath, "s_" + uploadFileName);
-//
-//                BufferedImage bo_image = ImageIO.read(saveFile);    // bo_image = buffered original img
-//                /* 비율 */
-//                double ratio = 3;
-//                int width = (int) (bo_image.getWidth() / ratio);
-//                int height = (int) (bo_image.getHeight() / ratio);
-//
-//                // 생성자 매개변수 넓이, 높이, 생성될 이미지 타입
-//                BufferedImage bt_image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-//
-//                Graphics2D graphic = bt_image.createGraphics();
-//
-//                graphic.drawImage(bo_image, 0, 0, width, height, null);
-//
-//                ImageIO.write(bt_image, "jpg", thumbnailFile);
-
-                /* 방법 2 thumbnailator 사용 */
 
                 File thumbnailFile = new File(uploadPath, "s_" + uploadFileName);
 
