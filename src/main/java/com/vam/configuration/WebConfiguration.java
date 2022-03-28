@@ -4,10 +4,15 @@ import com.vam.interceptor.AdminInterceptor;
 import com.vam.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -21,6 +22,7 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     private AdminMapper adminMapper;
 
+    @Transactional
     @Override
     public void bookEnroll(BookVO book) {
 

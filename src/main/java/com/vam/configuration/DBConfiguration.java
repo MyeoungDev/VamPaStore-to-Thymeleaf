@@ -11,8 +11,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 
 @Configuration
 @PropertySource(value = "classpath:/application.properties")
@@ -43,5 +47,11 @@ public class DBConfiguration {
     @Bean
     public SqlSessionTemplate sqlSession() throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory());
+    }
+
+    /* Transaction */
+    @Bean
+    public PlatformTransactionManager transactionManager() throws URISyntaxException, GeneralSecurityException {
+        return new DataSourceTransactionManager(dataSource());
     }
 }

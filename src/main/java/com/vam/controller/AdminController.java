@@ -418,4 +418,6 @@ public class AdminController {
 
         return new ResponseEntity<String>("Success", HttpStatus.OK);
     }
+
+    /* TODO -> mybatis <selecyKey>, @Transactional 선언적 트랜잭션 공부하고 글 작성 */
 }
