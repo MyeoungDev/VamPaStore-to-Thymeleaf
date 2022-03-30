@@ -29,11 +29,6 @@
             #{bookIntro},
             #{bookContents}
         )
-
-        <selectKey resultType="int" keyProperty="bookId" order="AFTER">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
-
     </insert>
 
     <!-- 카테고리 리스트 -->
@@ -109,7 +104,7 @@
     </delete>
 
     <insert id="imageEnroll" parameterType="com.vam.domain.AttachImageVo">
-        INSERT INTO vam_image(bookId, fileName, uploadPath, uuid) VALUE (#{bookId}, #{fileName}, #{uuid}, #{uploadPath})
+        INSERT INTO vam_image(bookId, fileName, uploadPath, uuid) VALUE (#{bookId}, #{fileName}, #{uploadPath}, #{uuid})
     </insert>
 
 </mapper>

@@ -122,6 +122,17 @@
                         <textarea name="bookContents" id="bookContents_textarea" disabled th:value="${goodsInfo.bookContents}" th:text="${goodsInfo.bookContents}"></textarea>
                     </div>
                 </div>
+
+                <div class="form_section">
+                    <div class="form_section_title">
+                        <label>사움 이미지</label>
+                    </div>
+                    <div class="form_section_content">
+                        <div id="uploadResult">
+
+                        </div>
+                    </div>
+                </div>
                 <div class="btn_section" th:with="num = ${cri.pageNum}">
                     <button id="cancelBtn" class="btn" th:onclick="moveManagePage( [[ ${cri.makeQueryString(num)} ]] )">상품목록</button>
                     <button id="enrollBtn" class="btn enroll_btn" th:onclick="| location.href = '@{/admin/goodsModify( bookId = ${goodsInfo.bookId} )}' |">수정</button>
@@ -272,6 +283,33 @@
 
     }
 
+    let bookId = [[ ${goodsInfo.bookId}]];
+    let uploadResult = document.getElementById("uploadResult");
+
+    $.getJSON("/getAttachList", {bookId: bookId}, function (arr) {
+        console.log(arr);
+        let str = "";
+        let obj = arr[0];
+
+        if (arr.length === 0) {
+            let str = "";
+            str = `
+                <div id="result_card">
+                    <img src="/img/NoImage.png">
+                </div>`;
+            uploadResult.innerHTML = str;
+            return;
+        }
+        let path = obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName;
+        console.log(path);
+        let fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+        str = `
+            <div id="result_card" data-path="${obj.uploadPath}" data-uuid="${obj.uuid}" data-fileName="${obj.fileName}">
+            <img src="/display?fileName=${fileCallPath}">
+            </div>`;
+
+        uploadResult.innerHTML = str;
+    });
 
 
 

@@ -566,25 +566,17 @@
         let obj = uploadResultArr[0];
         let str = "";
 
-        /* encodeURIComponet() 메서드는 다음 문자 A-Z a-z 0-9 - _ . ! ~ * ' ( ) 을 제외한 모든 문자를
-        * UTF-8로 인코딩하여 이스케이프 문자로 변환해준다.
-        * */
+        /* enroll javascript에서 잘못해서 db column 값들에 " 가 붙어있었음 */
 
-        /* replace 적용 => 동작 o */
-        // let fileCallPath = encodeURIComponent(obj.uploadPath.replace(/\\/g, '/') + "/s_" + obj.uuid + "_" + obj.fileName);
-
-        /* replace 적용 x => 동작 o */
-        /* encodeURIComponent() 메서드는 /, \ 문자 또한 인코딩하기 때문에 replace()메서드를 사용 안해도 된다.*/
         let fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
-
 
         str = `<div id="result_card">
                 <img src="/display?fileName=${fileCallPath}">
                 <div class="imgDeleteBtn" data-file="${fileCallPath}" onclick="deleteFile()">x</div>
                </div>
-               <input type="hidden" name="imageList[0].fileName" value=${obj.fileName}">
-               <input type="hidden" name="imageList[0].uuid" value=${obj.uuid}">
-               <input type="hidden" name="imageList[0].uploadPath" value=${obj.uploadPath}">
+               <input type="hidden" name="imageList[0].fileName" value=${obj.fileName}>
+               <input type="hidden" name="imageList[0].uuid" value=${obj.uuid}>
+               <input type="hidden" name="imageList[0].uploadPath" value=${obj.uploadPath}>
               `;
 
         uploadResult.innerHTML = str
