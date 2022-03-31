@@ -34,4 +34,7 @@ public interface AdminMapper {
 
     /* 이미지 등록 */
     public void imageEnroll(AttachImageVo vo);
+
+    /* 지정 상품 이미지 전체 삭제 */
+    public void deleteImgAll(int bookId);
 }

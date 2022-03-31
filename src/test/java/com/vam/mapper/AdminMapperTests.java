@@ -110,5 +110,12 @@ public class AdminMapperTests {
         mapper.imageEnroll(vo);
     }
 
+    @Test
+    public void deleteImgAllTest() {
+        int bookId = 1020;
+        mapper.deleteImgAll(bookId);
+
+    }
+
 }
 

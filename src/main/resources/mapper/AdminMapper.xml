@@ -107,4 +107,7 @@
         INSERT INTO vam_image(bookId, fileName, uploadPath, uuid) VALUE (#{bookId}, #{fileName}, #{uploadPath}, #{uuid})
     </insert>
 
+    <delete id="deleteImgAll">
+        DELETE FROM vam_image WHERE bookId = #{bookId}
+    </delete>
 </mapper>

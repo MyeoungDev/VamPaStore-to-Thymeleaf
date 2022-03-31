@@ -138,6 +138,17 @@
                             <span class="ck_warn bookContents_warn">책 목차를 입력해주세요.</span>
                         </div>
                     </div>
+                    <div class="form_section">
+                        <div class="form_section_title">
+                            <label>상품 이미지</label>
+                        </div>
+                        <div class="form_section_content">
+                            <input type="file" id ="fileItem" name='uploadFile' style="height: 30px;">
+                            <div id="uploadResult">
+
+                            </div>
+                        </div>
+                    </div>
                 </form>
                 <div class="btn_section">
                     <button id="cancelBtn" class="btn">취 소</button>
@@ -438,6 +449,138 @@
         document.getElementById("discount_interface").value = bookDiscount;
 
     });
+
+    let bookId = [[ ${goodsInfo.bookId}]];
+    let uploadResult = document.getElementById("uploadResult");
+
+    $.getJSON("/getAttachList", {bookId: bookId}, function (arr) {
+        console.log(arr);
+        let str = "";
+        let obj = arr[0];
+
+        if (arr.length === 0) {
+            let str = "";
+            str = `
+                <div id="result_card">
+                    <img src="/img/NoImage.png">
+                </div>`;
+            uploadResult.innerHTML = str;
+            return;
+        }
+        let path = obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName;
+        console.log(path);
+        let fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+        str = `
+            <div id="result_card" data-path="${obj.uploadPath}" data-uuid="${obj.uuid}" data-fileName="${obj.fileName}">
+            <img src="/display?fileName=${fileCallPath}">
+            <div class="imgDeleteBtn" data-file="${fileCallPath}" onclick="deleteFile()"></div>
+            <input type="hidden" name="imageList[0].fileName" value="obj.fileName">
+            <input type="hidden" name="imageList[0].uuid" value="obj.uuid">
+            <input type="hidden" name="imageList[0].uploadPath" value="obj.uploadPath">
+            </div>`;
+
+        uploadResult.innerHTML = str;
+    });
+
+    /* 이미지 삭제 메서드 */
+
+    function deleteFile() {
+
+        document.getElementById("result_card").remove();
+
+    }
+
+    /* 이미지 업로드 */
+    document.querySelector("input[type=file]").addEventListener("change", function () {
+
+        let resultCard = document.getElementById("result_card");
+        if (typeof(resultCard) != 'undefined' && resultCard != null) {
+            deleteFile();
+        }
+
+        let formData = new FormData();  // 첨부파일을 서버로 전송하기 위한 객체 == 쉽게 말해 가상의 form 태그
+        let fileInput = document.querySelector("input[name=uploadFile]");
+        let fileList = fileInput.files;
+        let fileObj = fileList[0];
+
+        if (!fileCheck(fileList[0].name, fileList[0].size)) {
+            return false;
+        }
+
+        formData.append("uploadFile", fileObj);
+        $.ajax({
+            url: '/admin/uploadAjaxAction',
+            processData: false,     // false로 선언 시 formData를 String으로 변환하지 않음
+            contentType: false,     // false로 선언 시 content-type 헤더가 multipart/form-data로 전송하게 됨
+            data: formData,
+            type: 'POST',
+            dateType: 'json',
+            error: function (error) {
+                alert("이미지 파일이 아닙니다.");
+            },
+            success: function (result) {
+                console.log(result);
+                showUploadImage(result);
+            }
+        });
+
+
+        console.log("fileList: " + fileList);
+        console.log("fileList[0].name" + fileList[0].name);
+        console.log("fileList[0].size" + fileList[0].size);
+        console.log("fileList[0].type" + fileList[0].type);
+
+
+    });
+
+    let regex = new RegExp("(.*?)\.(jpg|jpeg|png)$");    // 파일 형식 jpg, jpeg, png 이미지 파일로 제한
+    let maxSize = 1048576; //1MB
+
+    function fileCheck(fileName, fileSize) {
+
+        if (fileSize >= maxSize) {
+            alert("파일 사이즈 초과");
+            return false;
+        }
+        if (!regex.test(fileName)) {
+            alert("해당 종류의 파일은 업로드할 수 없습니다.");
+            return false;
+        }
+
+        return true;
+    }
+
+    /* 이미지 출력 */
+    function showUploadImage(uploadResultArr) {
+
+        /* 전달받은 데이터 검증 */
+        if (uploadResultArr == null || uploadResultArr.length === 0) {
+            return;
+        }
+
+        let uploadResult = document.getElementById("uploadResult");
+
+        let obj = uploadResultArr[0];
+        let str = "";
+
+        /* enroll javascript에서 잘못해서 db column 값들에 " 가 붙어있었음 */
+
+        let fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+
+        str = `<div id="result_card">
+                <img src="/display?fileName=${fileCallPath}">
+                <div class="imgDeleteBtn" data-file="${fileCallPath}" onclick="deleteFile()">x</div>
+               </div>
+               <input type="hidden" name="imageList[0].fileName" value=${obj.fileName}>
+               <input type="hidden" name="imageList[0].uuid" value=${obj.uuid}>
+               <input type="hidden" name="imageList[0].uploadPath" value=${obj.uploadPath}>
+              `;
+
+        uploadResult.innerHTML = str
+
+    }
+
+
 
 
     /* ]] */
