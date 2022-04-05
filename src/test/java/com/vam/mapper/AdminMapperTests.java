@@ -8,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @SpringBootTest
 public class AdminMapperTests {
@@ -114,6 +115,70 @@ public class AdminMapperTests {
     public void deleteImgAllTest() {
         int bookId = 1020;
         mapper.deleteImgAll(bookId);
+    }
+
+    @Test
+    public void checkImageListTest() {
+        List<AttachImageVo> fileList = mapper.checkFileList();
+
+        List<Path> checkFilePath = new ArrayList<>();
+
+
+        fileList.forEach(vo -> {
+            Path path = Paths.get("C:\\upload", vo.getUploadPath(), vo.getUuid() + "_" + vo.getFileName());
+            checkFilePath.add(path);
+        });
+
+        System.out.println("fileCheckPath.............");
+        checkFilePath.forEach(list -> System.out.println("list = " + list));
+
+        fileList.forEach(vo -> {
+            Path path = Paths.get("C:\\upload", vo.getUploadPath(), "s_" + vo.getUuid() + "_" + vo.getFileName());
+            checkFilePath.add(path);
+        });
+
+        System.out.println("CheckFilePath 썸네일");
+        checkFilePath.forEach(list -> System.out.println("list = " + list));
+
+        File targetDir = Paths.get("C:\\upload", getFolderYesterDay()).toFile();
+        File[] targetFiles = targetDir.listFiles();
+
+        System.out.println("targetFile : ");
+        for (File file : targetFiles) {
+            System.out.println("file = " + file);
+        }
+
+        List<File> removeFileList = new ArrayList<File>(Arrays.asList(targetFiles));
+
+        for (File file : targetFiles) {
+            checkFilePath.forEach(checkFile ->{
+                if (file.toPath().equals(checkFile)) {
+                    removeFileList.remove(file);
+                }
+            });
+        }
+
+        System.out.println("remover file filter after........");
+        removeFileList.forEach(file -> {
+            System.out.println("file = " + file);
+        });
+
+        /* 파일 삭제 */
+        for (File file : removeFileList) {
+            System.out.println("remove file: " + file);
+            file.delete();
+        }
+    }
+
+    private String getFolderYesterDay() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.add(Calendar.DATE, -1);
+        String str = sdf.format(cal.getTime());
+        return str.replace("-", File.separator);
+
 
     }
 

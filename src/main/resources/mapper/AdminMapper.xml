@@ -110,4 +110,10 @@
     <delete id="deleteImgAll">
         DELETE FROM vam_image WHERE bookId = #{bookId}
     </delete>
+
+    <select id="checkFileList" resultType="com.vam.domain.AttachImageVo">
+        SELECT *
+        FROM vam_image
+        WHERE uploadpath = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 DAY), '%Y\%m\%d')
+    </select>
 </mapper>

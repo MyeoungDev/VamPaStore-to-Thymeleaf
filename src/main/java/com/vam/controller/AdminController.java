@@ -419,5 +419,6 @@ public class AdminController {
         return new ResponseEntity<String>("Success", HttpStatus.OK);
     }
 
-    /* TODO -> @Transactional 선언적 트랜잭션 공부하고 글 작성 */
+    /* TODO -> Spring Batch, Quartz */
+    /* TODO -> Spring Scheduler */
 }

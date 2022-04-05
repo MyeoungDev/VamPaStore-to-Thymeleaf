@@ -31,6 +31,10 @@ dependencies {
 	implementation 'commons-io:commons-io:2.11.0'	/* Apache commons-io */
 	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4' /* Apache Commons FileUpload */
 	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.1'	/* thumbnailator */
+	// https://mvnrepository.com/artifact/org.quartz-scheduler/quartz-jobs
+//	implementation group: 'org.quartz-scheduler', name: 'quartz-jobs', version: '2.3.2'	/* Quartz-Jobs*/
+	//	https://mvnrepository.com/artifact/org.quartz-scheduler/quartz/2.3.2
+//	implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'	/* Quartz */
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'

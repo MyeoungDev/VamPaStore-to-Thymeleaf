@@ -50,8 +50,8 @@ public class DBConfiguration {
     }
 
     /* Transaction */
-    @Bean
-    public PlatformTransactionManager transactionManager() throws URISyntaxException, GeneralSecurityException {
-        return new DataSourceTransactionManager(dataSource());
-    }
+//    @Bean
+//    public PlatformTransactionManager transactionManager() throws URISyntaxException, GeneralSecurityException {
+//        return new DataSourceTransactionManager(dataSource());
+//    }
 }
